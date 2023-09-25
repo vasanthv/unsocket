@@ -23,6 +23,8 @@
 const bodyParser = require("body-parser");
 const EventEmitter = require("events");
 const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
 
 // Configure port on which the HTTP server shoudl run
 const PORT = process.env.PORT || 3000;
@@ -35,12 +37,18 @@ pinggyEventEmitter.setMaxListeners(0);
 
 const app = express();
 
+// Allow CORS
+app.use(cors());
+
+// HTTP request logging
+app.use(morgan("common"));
+
 // An express js middleware to validate channel name and populate `req.channel`
 const validateChannelName = (req, res, next) => {
 	if (!req.params.channel) return res.status(400).send("empty-channel");
 	const channel = req.params.channel.toLowerCase();
 
-	if (!/^([a-z0-9]){1,40}$/.test(channel)) return res.status(400).send("invalid-channel");
+	if (!/^([a-z0-9-]){1,40}$/.test(channel)) return res.status(400).send("invalid-channel");
 
 	req.channel = channel;
 	next();
@@ -51,7 +59,7 @@ const validateEventName = (req, res, next) => {
 	if (!req.params.event) return next();
 	const event = req.params.event.toLowerCase();
 
-	if (!/^([a-z0-9]){1,40}$/.test(event)) return res.status(400).send("invalid-event");
+	if (!/^([a-z0-9-]){1,40}$/.test(event)) return res.status(400).send("invalid-event");
 
 	req.event = event;
 	next();
@@ -64,14 +72,15 @@ app.use("/:channel/:event", validateEventName);
 // Since SSE only support string data we are just parsing raw text body
 app.use(["/:channel", "/:channel/:event"], bodyParser.text());
 
-// Use HTTP POST to post events on a channel
+// Use HTTP POST to post data & events on a channel
 app.post(["/:channel", "/:channel/:event"], (req, res) => {
-	console.log(req.event, req.body);
-	pinggyEventEmitter.emit(req.channel, { event: req.event, data: req.body });
+	const data = typeof req.body === "object" ? "" : req.body;
+	pinggyEventEmitter.emit(req.channel, { event: req.event, data });
 
 	res.send("ok");
 });
 
+// SSE endpoint
 app.get("/:channel", (req, res) => {
 	res.header("Content-Type", "text/event-stream");
 	res.header("Connection", "keep-alive");
@@ -86,7 +95,13 @@ app.get("/:channel", (req, res) => {
 	};
 
 	pinggyEventEmitter.on(req.channel, onEvent);
-	const data = `event: connected\n\n`;
+
+	// Post initial message
+	const listenersCount = pinggyEventEmitter.listeners(req.channel).length;
+	// sending connected event
+	let data = `event: connected\n`;
+	// number of listerned on the channel is sent as data
+	data += `data: ${listenersCount} listener${listenersCount === 1 ? "" : "s"}\n\n`;
 	res.write(data);
 
 	req.on("close", () => {
