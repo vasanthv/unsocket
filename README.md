@@ -1,8 +1,8 @@
 # Pinggy
 
-## A free, http-based pub-sub service.
+## A free, HTTP-based pub-sub service.
 
-Pinggy uses HTTP POST to post events and server side events (SSE) to subscribe to events.
+Pinggy uses HTTP POST to post events and Server-Sent Events (SSE) to subscribe to events. So, no third-party client is needed, all major browsers support this protocol.
 
 > Note: Pinggy does not persist any data, it just emits the events as and when received, so there is a chance of data loss when clients are not subscribed.
 
@@ -14,7 +14,7 @@ Pinggy uses channels to differentiate multiple streams. You can use SSE as below
 const events = new EventSource("https://pinggy.com/test-channel");
 ```
 
-Here `test-channel` is the channel name. A channel name should be lower cased alphanumeric characters upto 40 characters long.
+Here `test-channel` is the channel name. A channel name should be lowercase alphanumeric characters up to 40 characters long.
 
 ### Listening to events
 
@@ -30,7 +30,7 @@ events.addEventListener("chat", (e) => console.log(e));
 
 ### Posting to channel
 
-Use simple HTTP POST for emitting events to all the subscribers. Currently only plain text body is supported.
+Use simple HTTP POST for emitting events to all the subscribers. Currently, only plain text body is supported.
 
 ```js
 fetch("https://pinggy.com/test-channel", {
