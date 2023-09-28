@@ -116,3 +116,5 @@ app.get("/:channel", (req, res) => {
 
 // Start the express server
 app.listen(PORT, null, () => console.log(`Listening on port ${PORT}`));
+
+module.exports = app;
