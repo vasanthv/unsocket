@@ -25,7 +25,6 @@ const EventEmitter = require("events");
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const path = require("path");
 
 // Configure port on which the HTTP server shoudl run
 const PORT = process.env.PORT || 3000;
@@ -40,9 +39,6 @@ const app = express();
 
 // Allow CORS
 app.use(cors());
-
-// server to public folder for website
-app.use(express.static(path.join(__dirname, "public/")));
 
 // HTTP request logging
 app.use(morgan("common"));
@@ -116,5 +112,3 @@ app.get("/:channel", (req, res) => {
 
 // Start the express server
 app.listen(PORT, null, () => console.log(`Listening on port ${PORT}`));
-
-module.exports = app;
