@@ -1,10 +1,10 @@
 {
-	"name": "pinggy",
+	"name": "unsocket",
 	"version": "1.0.0",
-	"description": "A free http-based pup-sub service",
-	"main": "pinggy.js",
+	"description": "A HTTP-based pub-sub service to replace websockets",
+	"main": "unsocket.js",
 	"scripts": {
-		"start": "node pinggy.js",
+		"start": "node unsocket.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [

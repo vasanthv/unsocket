@@ -1,17 +1,17 @@
-# Pinggy
+# Unsocket
 
 ## A free, HTTP-based pub-sub service.
 
-Pinggy uses HTTP POST to post events and Server-Sent Events (SSE) to subscribe to events. So, no third-party client is needed, all major browsers support this protocol.
+Unsocket uses HTTP POST to post events and Server-Sent Events (SSE) to subscribe to events. So, no third-party client is needed, all major browsers support this protocol.
 
-> Note: Pinggy does not persist any data, it just emits the events as and when received, so there is a chance of data loss when clients are not subscribed.
+> Note: Unsocket does not persist any data, it just emits the events as and when received, so there is a chance of data loss when clients are not subscribed.
 
 ### Subscribe to a channel
 
-Pinggy uses channels to differentiate multiple streams. You can use SSE as below to subscribe to any channel.
+Unsocket uses channels to differentiate multiple streams. You can use SSE as below to subscribe to any channel.
 
 ```js
-const events = new EventSource("https://pinggy.com/test-channel");
+const events = new EventSource("https://unsocket.com/test-channel");
 ```
 
 Here `test-channel` is the channel name. A channel name should be lowercase alphanumeric characters up to 40 characters long.
@@ -33,7 +33,7 @@ events.addEventListener("chat", (e) => console.log(e));
 Use simple HTTP POST for emitting events to all the subscribers. Currently, only plain text body is supported.
 
 ```js
-fetch("https://pinggy.com/test-channel", {
+fetch("https://unsocket.com/test-channel", {
 	method: "POST",
 	mode: "cors",
 	cache: "no-cache",
@@ -47,7 +47,7 @@ fetch("https://pinggy.com/test-channel", {
 Fork this repo and then clone it:
 
 ```
-git clone https://github.com/<your_name>/pinggy.git
+git clone https://github.com/<your_name>/unsocket.git
 ```
 
 ```

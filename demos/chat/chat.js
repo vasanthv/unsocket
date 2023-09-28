@@ -1,9 +1,9 @@
-const pinggyServer = "https://pinggy.com"; // Use http://localhost:3000 for local testing
+const unsocketServer = "https://unsocket.com"; // Use http://localhost:3000 for local testing
 
 const init = (_name) => {
 	if (!_name) return askName();
 
-	const events = new EventSource(`${pinggyServer}/pinggy-demo`);
+	const events = new EventSource(`${unsocketServer}/unsocket-demo`);
 
 	events.addEventListener("connected", ({ data }) => {
 		document.getElementById("listeners").textContent = data;
@@ -28,7 +28,7 @@ const askName = () => {
 async function sendChat(data) {
 	if (!data) return alert("Empty chat");
 	const body = JSON.stringify({ name: window.localStorage.name, text: data });
-	const response = await fetch(`${pinggyServer}/pinggy-demo/chat`, {
+	const response = await fetch(`${unsocketServer}/unsocket-demo/chat`, {
 		method: "POST",
 		mode: "cors",
 		cache: "no-cache",

@@ -25,20 +25,24 @@ const EventEmitter = require("events");
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const path = require("path");
 
 // Configure port on which the HTTP server shoudl run
 const PORT = process.env.PORT || 3000;
 
 // Initialize the event emitter
-const pinggyEventEmitter = new EventEmitter();
+const unsocketEventEmitter = new EventEmitter();
 
 // Setting the max listeners as "0" which means there is no limit to the listeners
-pinggyEventEmitter.setMaxListeners(0);
+unsocketEventEmitter.setMaxListeners(0);
 
 const app = express();
 
 // Allow CORS
 app.use(cors());
+
+// server to public folder for website
+app.use(express.static(path.join(__dirname, "public/")));
 
 // HTTP request logging
 app.use(morgan("common"));
@@ -75,7 +79,7 @@ app.use(["/:channel", "/:channel/:event"], bodyParser.text());
 // Use HTTP POST to post data & events on a channel
 app.post(["/:channel", "/:channel/:event"], (req, res) => {
 	const data = typeof req.body === "object" ? "" : req.body;
-	pinggyEventEmitter.emit(req.channel, { event: req.event, data });
+	unsocketEventEmitter.emit(req.channel, { event: req.event, data });
 
 	res.send("ok");
 });
@@ -94,10 +98,10 @@ app.get("/:channel", (req, res) => {
 		res.write(write);
 	};
 
-	pinggyEventEmitter.on(req.channel, onEvent);
+	unsocketEventEmitter.on(req.channel, onEvent);
 
 	// Post initial message
-	const listenersCount = pinggyEventEmitter.listeners(req.channel).length;
+	const listenersCount = unsocketEventEmitter.listeners(req.channel).length;
 	// sending connected event
 	let data = `event: connected\n`;
 	// number of listerned on the channel is sent as data
@@ -105,7 +109,7 @@ app.get("/:channel", (req, res) => {
 	res.write(data);
 
 	req.on("close", () => {
-		pinggyEventEmitter.off(req.channel, onEvent);
+		unsocketEventEmitter.off(req.channel, onEvent);
 		res.end();
 	});
 });
