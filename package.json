@@ -2,9 +2,9 @@
 	"name": "unsocket",
 	"version": "1.0.0",
 	"description": "A HTTP-based pub-sub service to replace websockets",
-	"main": "unsocket.js",
+	"main": "index.js",
 	"scripts": {
-		"start": "node unsocket.js",
+		"start": "node index.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [
