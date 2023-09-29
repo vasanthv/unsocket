@@ -1,17 +1,15 @@
 # Unsocket
 
-## A free, HTTP-based pub-sub service.
+## A HTTP-based pub-sub service to replace websockets using Express.js
 
 Unsocket uses HTTP POST to post events and Server-Sent Events (SSE) to subscribe to events. So, no third-party client is needed, all major browsers support this protocol.
-
-> Note: Unsocket does not persist any data, it just emits the events as and when received, so there is a chance of data loss when clients are not subscribed.
 
 ### Subscribe to a channel
 
 Unsocket uses channels to differentiate multiple streams. You can use SSE as below to subscribe to any channel.
 
 ```js
-const events = new EventSource("https://unsocket.com/test-channel");
+const events = new EventSource("/test-channel");
 ```
 
 Here `test-channel` is the channel name. A channel name should be lowercase alphanumeric characters up to 40 characters long.
@@ -33,7 +31,7 @@ events.addEventListener("chat", (e) => console.log(e));
 Use simple HTTP POST for emitting events to all the subscribers. Currently, only plain text body is supported.
 
 ```js
-fetch("https://unsocket.com/test-channel", {
+fetch("/test-channel", {
 	method: "POST",
 	mode: "cors",
 	cache: "no-cache",

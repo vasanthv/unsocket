@@ -1,4 +1,4 @@
-const unsocketServer = "https://unsocket.com"; // Use http://localhost:3000 for local testing
+const unsocketServer = "http://localhost:3000"; // Running locally
 
 const init = (_name) => {
 	if (!_name) return askName();
